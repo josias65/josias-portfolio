@@ -1,0 +1,198 @@
+@import "tailwindcss";
+
+/* ═══════════════════════════════════════════════════════
+   DESIGN TOKENS — PAPIER D'ATELIER (LIGHT) & STUDIO (DARK)
+═══════════════════════════════════════════════════════ */
+:root,
+[data-theme="paper"] {
+  /* Palette Atelier Papier */
+  --paper: #faf7f2;
+  --paper-2: #efe8dc;
+  --ink: #171513;
+  --ink-c: #171513;
+  --muted: #6b6459;
+  --muted-c: #6b6459;
+  --line: rgba(23, 21, 19, 0.11);
+
+  --surface-card: #ffffff;
+  --surface-subtle: rgba(23, 21, 19, 0.035);
+
+  --clay: #b4452a;
+  --clay-tint: rgba(180, 69, 42, 0.08);
+  --forest: #2b5641;
+  --ochre: #b57c2c;
+
+  --nav-bg: rgba(250, 247, 242, 0.88);
+  --badge-bg: #ffffff;
+}
+
+[data-theme="studio"] {
+  /* Palette Studio Sombre */
+  --paper: #0e1116;
+  --paper-2: #151a22;
+  --ink: #f2ece1;
+  --ink-c: #f2ece1;
+  --muted: #9c9588;
+  --muted-c: #9c9588;
+  --line: rgba(242, 236, 225, 0.11);
+
+  --surface-card: #151a21;
+  --surface-subtle: rgba(242, 236, 225, 0.04);
+
+  --clay: #e26140;
+  --clay-tint: rgba(226, 97, 64, 0.14);
+  --forest: #3fa575;
+  --ochre: #e29f44;
+
+  --nav-bg: rgba(14, 17, 22, 0.88);
+  --badge-bg: #181e28;
+}
+
+/* ═══════════════════════════════════════════════════════
+   BASE & TYPOGRAPHY
+═══════════════════════════════════════════════════════ */
+@layer base {
+  *, *::before, *::after {
+    box-sizing: border-box;
+  }
+
+  html {
+    scroll-behavior: smooth;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    overflow-x: hidden;
+    background-color: var(--paper);
+    color: var(--ink);
+    transition: background-color 0.3s ease, color 0.3s ease;
+  }
+
+  body {
+    background-color: var(--paper);
+    color: var(--ink);
+    font-family: var(--font-karla, system-ui, sans-serif);
+    line-height: 1.6;
+    overflow-x: hidden;
+  }
+
+  ::selection {
+    background: var(--clay-tint);
+    color: var(--clay);
+  }
+}
+
+.font-display {
+  font-family: var(--font-fraunces), Georgia, serif;
+}
+
+.font-mono {
+  font-family: var(--font-mono), monospace;
+}
+
+/* ═══════════════════════════════════════════════════════
+   GRAIN & TACTILE TEXTURES
+═══════════════════════════════════════════════════════ */
+.paper-grain {
+  pointer-events: none;
+  position: fixed;
+  inset: 0;
+  z-index: 1;
+  opacity: 0.22;
+  mix-blend-mode: multiply;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.55'/%3E%3C/svg%3E");
+}
+
+[data-theme="studio"] .paper-grain {
+  opacity: 0.12;
+  mix-blend-mode: screen;
+}
+
+/* ═══════════════════════════════════════════════════════
+   SCROLLBAR
+═══════════════════════════════════════════════════════ */
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  background: var(--paper);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--line);
+  border-radius: 9999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--clay);
+}
+
+/* ═══════════════════════════════════════════════════════
+   ACCESSIBILITY & REDUCED MOTION
+═══════════════════════════════════════════════════════ */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* ═══════════════════════════════════════════════════════
+   PERSPECTIVE UTILITY (for 3D badge)
+═══════════════════════════════════════════════════════ */
+.perspective-1000 {
+  perspective: 1000px;
+}
+
+/* ═══════════════════════════════════════════════════════
+   GLASSMORPHISM CARD
+═══════════════════════════════════════════════════════ */
+.glass-card {
+  background: rgba(255, 255, 255, 0.07);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+[data-theme="paper"] .glass-card {
+  background: rgba(250, 247, 242, 0.65);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border: 1px solid rgba(23, 21, 19, 0.1);
+}
+
+/* ═══════════════════════════════════════════════════════
+   MAGNETIC HOVER GLOW
+═══════════════════════════════════════════════════════ */
+.clay-glow:hover {
+  box-shadow: 0 0 0 1px var(--clay), 0 4px 24px rgba(180,69,42,0.2);
+}
+
+/* ═══════════════════════════════════════════════════════
+   SECTION SEPARATOR GRADIENT
+═══════════════════════════════════════════════════════ */
+.section-sep {
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--clay) 30%, var(--forest) 70%, transparent);
+  opacity: 0.3;
+  margin: 0 auto;
+  max-width: 600px;
+}
+
+/* ═══════════════════════════════════════════════════════
+   LINK UNDERLINE GROW ANIMATION
+═══════════════════════════════════════════════════════ */
+.link-grow {
+  position: relative;
+}
+.link-grow::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: -2px;
+  width: 0;
+  height: 1.5px;
+  background: var(--clay);
+  transition: width 0.3s ease;
+}
+.link-grow:hover::after {
+  width: 100%;
+}
+
