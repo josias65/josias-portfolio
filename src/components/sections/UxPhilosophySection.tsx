@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Compass, Feather, Cpu, Heart, Check, Sparkles, Coffee } from 'lucide-react';
 import { sound } from '@/lib/sound';
+import { TiltCard } from '@/components/interactive/TiltCard';
 
 const PILLARS = [
   {
@@ -67,11 +68,10 @@ export function UxPhilosophySection() {
         {PILLARS.map((p, idx) => {
           const Icon = p.icon;
           return (
-            <motion.div
+            <TiltCard
               key={p.title}
-              whileHover={{ y: -4 }}
-              transition={{ type: 'spring', stiffness: 300, damping: 20 }}
-              className="rounded-3xl border border-[var(--line)] bg-[var(--surface-card)] p-7 flex flex-col justify-between"
+              max={8}
+              className="h-full rounded-3xl border border-[var(--line)] bg-[var(--surface-card)] p-7 flex flex-col justify-between"
             >
               <div>
                 <div className="flex items-center justify-between mb-4">
@@ -94,7 +94,7 @@ export function UxPhilosophySection() {
                   “{p.quote}”
                 </p>
               </div>
-            </motion.div>
+            </TiltCard>
           );
         })}
       </div>
@@ -117,9 +117,10 @@ export function UxPhilosophySection() {
 
         <div className="grid gap-3 pt-6 sm:grid-cols-2 lg:grid-cols-3">
           {DESK_TOOLS.map((tool, idx) => (
-            <div
+            <TiltCard
               key={tool.name}
-              className="p-4 rounded-2xl border border-[var(--line)] bg-[var(--surface-card)] hover:border-[var(--clay)] transition-all cursor-default"
+              max={5}
+              className="p-4 rounded-2xl border border-[var(--line)] bg-[var(--surface-card)] hover:border-[var(--clay)] transition-colors cursor-default"
             >
               <div className="flex items-center justify-between text-[10px] font-mono mb-2">
                 <span className="text-[var(--clay)] font-semibold">{tool.tag}</span>
@@ -127,7 +128,7 @@ export function UxPhilosophySection() {
               </div>
               <h5 className="font-medium text-sm text-[var(--ink)]">{tool.name}</h5>
               <p className="text-xs text-[var(--muted)] mt-1">{tool.role}</p>
-            </div>
+            </TiltCard>
           ))}
         </div>
       </div>

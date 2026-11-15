@@ -196,3 +196,379 @@
   width: 100%;
 }
 
+
+/* ═══════════════════════════════════════════════════════
+   DYNAMIC BORDER GLOW
+═══════════════════════════════════════════════════════ */
+@property --border-angle {
+  syntax: '<angle>';
+  inherits: false;
+  initial-value: 0deg;
+}
+
+.border-glow {
+  position: relative;
+}
+.border-glow::before {
+  content: '';
+  position: absolute;
+  inset: -1px;
+  border-radius: inherit;
+  padding: 1px;
+  background: linear-gradient(
+    135deg,
+    transparent 30%,
+    var(--clay) 50%,
+    var(--forest) 70%,
+    transparent 100%
+  );
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  opacity: 0;
+  transition: opacity 0.4s ease;
+  pointer-events: none;
+}
+.border-glow:hover::before {
+  opacity: 1;
+}
+
+/* Animated gradient rotation on hover */
+@keyframes borderRotate {
+  from { --border-angle: 0deg; }
+  to { --border-angle: 360deg; }
+}
+
+.border-glow-rotate::before {
+  background: conic-gradient(
+    from var(--border-angle, 0deg),
+    transparent 30%,
+    var(--clay) 40%,
+    var(--forest) 60%,
+    transparent 70%
+  );
+}
+.border-glow-rotate:hover::before {
+  animation: borderRotate 3s linear infinite;
+}
+
+/* ═══════════════════════════════════════════════════════
+   ENHANCED CARD INTERACTIONS  
+═══════════════════════════════════════════════════════ */
+.card-lift {
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s ease;
+}
+.card-lift:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.08);
+}
+
+[data-theme="studio"] .card-lift:hover {
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.3);
+}
+
+/* ═══════════════════════════════════════════════════════
+   RIPPLE EFFECT
+═══════════════════════════════════════════════════════ */
+.ripple-container {
+  position: relative;
+  overflow: hidden;
+}
+.ripple-container::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at var(--ripple-x, 50%) var(--ripple-y, 50%), 
+    var(--clay-tint) 0%, transparent 60%);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+}
+.ripple-container:active::after {
+  opacity: 1;
+}
+
+/* ═══════════════════════════════════════════════════════
+   SPOTLIGHT GRADIENT (for SpotlightEffect component)
+═══════════════════════════════════════════════════════ */
+.spotlight-layer {
+  pointer-events: none;
+  position: fixed;
+  inset: 0;
+  z-index: 2;
+  transition: opacity 0.3s ease;
+}
+
+/* ═══════════════════════════════════════════════════════
+   INFINITE MARQUEE
+═══════════════════════════════════════════════════════ */
+@keyframes marquee-scroll {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+@keyframes marquee-scroll-reverse {
+  from { transform: translateX(-50%); }
+  to { transform: translateX(0); }
+}
+
+.marquee-track {
+  display: flex;
+  width: max-content;
+  animation: marquee-scroll var(--marquee-duration, 30s) linear infinite;
+}
+.marquee-track[data-direction="right"] {
+  animation-name: marquee-scroll-reverse;
+}
+.marquee-track:hover {
+  animation-play-state: paused;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .marquee-track {
+    animation: none !important;
+  }
+}
+
+.marquee-fade {
+  -webkit-mask-image: linear-gradient(90deg, transparent, black 10%, black 90%, transparent);
+  mask-image: linear-gradient(90deg, transparent, black 10%, black 90%, transparent);
+}
+
+/* ═══════════════════════════════════════════════════════
+   FOCUS VISIBLE STYLES (Accessibility)
+═══════════════════════════════════════════════════════ */
+:focus-visible {
+  outline: 2px solid var(--clay);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+/* ═══════════════════════════════════════════════════════
+   BUTTON GLOW ON HOVER
+═══════════════════════════════════════════════════════ */
+.btn-glow {
+  position: relative;
+  transition: box-shadow 0.3s ease;
+}
+.btn-glow:hover {
+  box-shadow: 0 0 20px rgba(180, 69, 42, 0.25), 0 0 60px rgba(180, 69, 42, 0.1);
+}
+[data-theme="studio"] .btn-glow:hover {
+  box-shadow: 0 0 20px rgba(226, 97, 64, 0.3), 0 0 60px rgba(226, 97, 64, 0.15);
+}
+
+/* ═══════════════════════════════════════════════════════
+   TEXT GRADIENT UTILITY
+═══════════════════════════════════════════════════════ */
+.text-gradient-clay {
+  background: linear-gradient(135deg, var(--clay), var(--ochre));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+
+/* ═══════════════════════════════════════════════════════
+   3D KINETIC TYPOGRAPHY
+═══════════════════════════════════════════════════════ */
+.kinetic-word {
+  display: inline-block;
+  transform-style: preserve-3d;
+  perspective: 800px;
+}
+
+/* ═══════════════════════════════════════════════════════
+   HOLOGRAPHIC BADGE EFFECT
+═══════════════════════════════════════════════════════ */
+@property --holo-angle {
+  syntax: '<angle>';
+  inherits: false;
+  initial-value: 0deg;
+}
+
+.holographic-sheen {
+  background: conic-gradient(
+    from var(--holo-angle, 0deg) at 50% 50%,
+    rgba(255, 120, 50, 0.12) 0%,
+    rgba(100, 200, 255, 0.12) 25%,
+    rgba(255, 200, 50, 0.12) 50%,
+    rgba(120, 255, 180, 0.12) 75%,
+    rgba(255, 120, 50, 0.12) 100%
+  );
+  animation: holoRotate 6s linear infinite;
+}
+
+@keyframes holoRotate {
+  from { --holo-angle: 0deg; }
+  to { --holo-angle: 360deg; }
+}
+
+[data-theme="paper"] .holographic-sheen {
+  opacity: 0.5;
+}
+
+/* ═══════════════════════════════════════════════════════
+   PORTAL TRANSITION
+═══════════════════════════════════════════════════════ */
+.portal-enter {
+  clip-path: circle(0% at 50% 50%);
+}
+.portal-enter-active {
+  clip-path: circle(100% at 50% 50%);
+  transition: clip-path 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* ═══════════════════════════════════════════════════════
+   LIQUID MORPH BUTTON
+═══════════════════════════════════════════════════════ */
+.liquid-btn {
+  position: relative;
+  overflow: hidden;
+}
+.liquid-btn::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    circle at var(--liquid-x, 50%) var(--liquid-y, 50%),
+    rgba(255, 255, 255, 0.2) 0%,
+    transparent 50%
+  );
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+}
+.liquid-btn:hover::before {
+  opacity: 1;
+}
+
+/* ═══════════════════════════════════════════════════════
+   3D DEPTH CARD
+═══════════════════════════════════════════════════════ */
+.depth-card {
+  transform-style: preserve-3d;
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), 
+              box-shadow 0.4s ease;
+}
+.depth-card:hover {
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.12),
+              0 8px 20px rgba(0, 0, 0, 0.06);
+}
+[data-theme="studio"] .depth-card:hover {
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4),
+              0 8px 20px rgba(0, 0, 0, 0.2);
+}
+
+.depth-card-inner {
+  transform: translateZ(0);
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.depth-card:hover .depth-card-inner {
+  transform: translateZ(20px);
+}
+
+/* ═══════════════════════════════════════════════════════
+   3D TIMELINE PERSPECTIVE
+═══════════════════════════════════════════════════════ */
+.timeline-3d {
+  perspective: 1200px;
+  perspective-origin: center center;
+}
+
+.timeline-card-3d {
+  transform-style: preserve-3d;
+  transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1),
+              opacity 0.6s ease,
+              filter 0.6s ease;
+}
+
+/* ═══════════════════════════════════════════════════════
+   PROCEDURAL LIGHT RAYS
+═══════════════════════════════════════════════════════ */
+@keyframes lightRay {
+  0% { opacity: 0; transform: translateX(-100%) rotate(35deg); }
+  15% { opacity: 0.06; }
+  85% { opacity: 0.06; }
+  100% { opacity: 0; transform: translateX(200%) rotate(35deg); }
+}
+
+.light-ray {
+  pointer-events: none;
+  position: fixed;
+  top: -50%;
+  width: 200px;
+  height: 200%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    var(--clay-tint) 40%,
+    var(--clay-tint) 60%,
+    transparent
+  );
+  animation: lightRay 12s ease-in-out infinite;
+  opacity: 0;
+  z-index: 1;
+}
+.light-ray:nth-child(2) {
+  animation-delay: 4s;
+  width: 120px;
+}
+.light-ray:nth-child(3) {
+  animation-delay: 8s;
+  width: 80px;
+}
+
+[data-theme="paper"] .light-ray {
+  display: none;
+}
+
+/* ═══════════════════════════════════════════════════════
+   3D SKILLS MARQUEE
+═══════════════════════════════════════════════════════ */
+@keyframes marquee3d {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+
+.marquee-3d-track {
+  display: flex;
+  width: max-content;
+  animation: marquee3d 40s linear infinite;
+}
+
+.marquee-3d-track:hover {
+  animation-play-state: paused;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .marquee-3d-track,
+  .holographic-sheen,
+  .light-ray {
+    animation: none !important;
+  }
+}
+
+/* ═══════════════════════════════════════════════════════
+   CINEMATIC BOOT SCREEN
+═══════════════════════════════════════════════════════ */
+@keyframes bootScanline {
+  0% { top: -10%; }
+  100% { top: 110%; }
+}
+
+.boot-scanline {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 60px;
+  background: linear-gradient(
+    180deg,
+    transparent,
+    rgba(255, 122, 24, 0.06) 40%,
+    rgba(255, 122, 24, 0.06) 60%,
+    transparent
+  );
+  animation: bootScanline 3s linear infinite;
+  pointer-events: none;
+}
+

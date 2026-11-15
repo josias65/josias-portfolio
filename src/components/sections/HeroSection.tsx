@@ -1,13 +1,21 @@
 'use client';
 
 import { useRef } from 'react';
+import dynamic from 'next/dynamic';
 import { motion, useScroll, useTransform, useSpring } from 'framer-motion';
 import { ArrowDown } from 'lucide-react';
 import { DesignerBadge } from '@/components/interactive/DesignerBadge';
 import { LomeTimeWidget } from '@/components/interactive/LomeTimeWidget';
 import { ShimmerButton, MagneticButton } from '@/components/interactive/MagneticButton';
-import { TextSplit } from '@/lib/animations';
+import { KineticWords } from '@/components/interactive/KineticWords';
+import { TiltCard } from '@/components/interactive/TiltCard';
 import { sound } from '@/lib/sound';
+
+// 3D stage: client-only (WebGL), loaded lazily so the hero text paints first.
+const WorldCanvas = dynamic(
+  () => import('@/components/3d/WorldCanvas').then((m) => m.WorldCanvas),
+  { ssr: false },
+);
 
 const pillars = [
   { icon: '✦', label: 'Design Centré Utilisateur', color: 'var(--clay)' },
@@ -84,25 +92,14 @@ export function HeroSection() {
 
           {/* Cinematic headline — word-by-word reveal */}
           <h1 className="font-display text-4xl sm:text-6xl lg:text-7xl font-medium tracking-tight text-[var(--ink)] leading-[1.06]">
-            <TextSplit
-              text="Concevoir pour le"
-              delay={0.15}
-              stagger={0.05}
-            />
+            <span className="sr-only">Concevoir pour le monde réel, pas pour les slides.</span>
+            <KineticWords text="Concevoir pour le" delay={0.15} stagger={0.07} />
             {' '}
             <span className="italic text-[var(--clay)] font-normal inline-block">
-              <TextSplit
-                text="monde réel,"
-                delay={0.45}
-                stagger={0.06}
-              />
+              <KineticWords text="monde réel," delay={0.45} stagger={0.09} />
             </span>
             <br />
-            <TextSplit
-              text="pas pour les slides."
-              delay={0.75}
-              stagger={0.04}
-            />
+            <KineticWords text="pas pour les slides." delay={0.75} stagger={0.06} />
           </h1>
 
           {/* Subtext clip reveal */}
@@ -195,7 +192,24 @@ export function HeroSection() {
             transition={{ duration: 1.0, delay: 0.4, ease: [0.16, 1, 0.3, 1] }}
             className="w-full flex flex-col items-center"
           >
-            <DesignerBadge />
+            {/* 3D stage: scene sits behind the interactive badge (badge unchanged) */}
+            {/* 3D stage: tilts with the pointer; image layer slowly breathes, 3D scene floats above it */}
+            <TiltCard
+              max={7}
+              className="relative w-full max-w-[460px] aspect-[4/5] rounded-[28px] overflow-hidden border border-[var(--line)] shadow-2xl"
+            >
+              <motion.div
+                aria-hidden
+                className="absolute inset-0 bg-cover bg-center"
+                style={{ backgroundImage: 'url(/stage/halftone.jpg)' }}
+                animate={{ scale: [1, 1.07, 1] }}
+                transition={{ duration: 16, repeat: Infinity, ease: 'easeInOut' }}
+              />
+              <WorldCanvas contained transparent />
+              <div className="absolute inset-0 flex items-center justify-center">
+                <DesignerBadge />
+              </div>
+            </TiltCard>
             <motion.p
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}

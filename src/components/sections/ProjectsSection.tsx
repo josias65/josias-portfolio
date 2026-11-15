@@ -8,6 +8,7 @@ import { projects } from '@/data/projects';
 import { FinflowSimulator } from '@/components/interactive/FinflowSimulator';
 import { SecurehubSimulator } from '@/components/interactive/SecurehubSimulator';
 import { Reveal, StaggerReveal } from '@/lib/animations';
+import { TiltCard } from '@/components/interactive/TiltCard';
 import { sound } from '@/lib/sound';
 
 export function ProjectsSection() {
@@ -95,11 +96,12 @@ export function ProjectsSection() {
 
                 {/* Metrics */}
                 <motion.div
-                  className="lg:col-span-4 grid grid-cols-3 gap-2 p-3 rounded-2xl border border-[var(--line)] bg-[var(--surface-subtle)]"
+                  className="lg:col-span-4"
                   initial={{ opacity: 0, scale: 0.94 }}
                   animate={{ opacity: 1, scale: 1 }}
                   transition={{ duration: 0.5, delay: 0.15 }}
                 >
+                <TiltCard className="grid grid-cols-3 gap-2 p-3 rounded-2xl border border-[var(--line)] bg-[var(--surface-subtle)] backdrop-blur-sm">
                   {project.metrics.map((m, i) => (
                     <motion.div
                       key={m.label}
@@ -116,33 +118,36 @@ export function ProjectsSection() {
                       </p>
                     </motion.div>
                   ))}
+                </TiltCard>
                 </motion.div>
               </div>
 
               {/* UX Challenge vs Solution */}
               <div className="grid gap-6 md:grid-cols-2">
                 <motion.div
-                  className="rounded-2xl border border-[var(--line)] bg-[var(--surface-card)] p-6"
                   initial={{ opacity: 0, x: -20 }}
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ duration: 0.5, delay: 0.1 }}
                 >
+                <TiltCard className="h-full rounded-2xl border border-[var(--line)] bg-[var(--surface-card)] p-6">
                   <span className="text-[11px] font-mono uppercase tracking-wider text-[var(--clay)] block mb-2">
                     Le Défi UX (La Friction)
                   </span>
                   <p className="text-sm text-[var(--ink)] leading-relaxed">{project.uxChallenge}</p>
+                </TiltCard>
                 </motion.div>
 
                 <motion.div
-                  className="rounded-2xl border border-[var(--line)] bg-[var(--surface-card)] p-6"
                   initial={{ opacity: 0, x: 20 }}
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ duration: 0.5, delay: 0.2 }}
                 >
+                <TiltCard className="h-full rounded-2xl border border-[var(--line)] bg-[var(--surface-card)] p-6">
                   <span className="text-[11px] font-mono uppercase tracking-wider text-[var(--forest)] block mb-2">
                     La Réponse Design
                   </span>
                   <p className="text-sm text-[var(--ink)] leading-relaxed">{project.uxSolution}</p>
+                </TiltCard>
                 </motion.div>
               </div>
 

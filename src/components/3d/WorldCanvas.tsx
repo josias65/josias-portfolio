@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useMemo, useRef } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
 import { ContactShadows, Sparkles } from '@react-three/drei';
 import { Bloom, EffectComposer, Vignette } from '@react-three/postprocessing';
@@ -252,12 +252,12 @@ function Rig({ reduced }: { reduced: boolean }) {
   return null;
 }
 
-function Scene() {
+function Scene({ lite, transparent }: { lite: boolean; transparent: boolean }) {
   const reduced = useReduced();
   return (
     <>
-      <color attach="background" args={['#0a0d14']} />
-      <fog attach="fog" args={['#0a0d14', 10, 22]} />
+      {!transparent && <color attach="background" args={['#0a0d14']} />}
+      {!transparent && <fog attach="fog" args={['#0a0d14', 10, 22]} />}
       <hemisphereLight color="#ffd4b0" groundColor="#121826" intensity={0.55} />
       <ambientLight intensity={0.28} />
       <spotLight position={[3.4, 3.2, 4]} angle={0.42} penumbra={0.6} intensity={55} color="#ff9a4a" />
@@ -268,23 +268,66 @@ function Scene() {
       <Sparkles count={reduced ? 16 : 50} scale={[10, 6, 8]} size={1.4} speed={0.25} color="#ffb070" opacity={0.35} />
       <ContactShadows position={[0, -1.45, 0]} opacity={0.4} scale={12} blur={2.8} far={3} color="#ff7a18" />
       <Rig reduced={reduced} />
-      <EffectComposer>
-        <Bloom luminanceThreshold={0.22} intensity={reduced ? 0.4 : 0.95} mipmapBlur />
-        <Vignette eskil={false} offset={0.15} darkness={0.55} />
-      </EffectComposer>
+      {!lite && (
+        <EffectComposer>
+          <Bloom luminanceThreshold={0.22} intensity={reduced ? 0.4 : 0.95} mipmapBlur />
+          <Vignette eskil={false} offset={0.15} darkness={0.55} />
+        </EffectComposer>
+      )}
     </>
   );
 }
 
-export function WorldCanvas() {
+/**
+ * Default: fixed full-screen backdrop (legacy immersive mode).
+ * `contained`: fills its positioned parent only (used as the hero stage),
+ * pauses rendering when scrolled out of view, and drops post-processing on
+ * small screens to save GPU.
+ */
+export function WorldCanvas({
+  contained = false,
+  transparent = false,
+}: {
+  contained?: boolean;
+  /** Renders over an external background (e.g. an image) instead of the dark scene. */
+  transparent?: boolean;
+}) {
+  const wrapRef = useRef<HTMLDivElement>(null);
+  const [visible, setVisible] = useState(true);
+  const [lite, setLite] = useState(false);
+
+  useEffect(() => {
+    const mq = window.matchMedia('(max-width: 767px)');
+    const apply = () => setLite(mq.matches);
+    apply();
+    mq.addEventListener('change', apply);
+    return () => mq.removeEventListener('change', apply);
+  }, []);
+
+  useEffect(() => {
+    if (!contained || !wrapRef.current) return;
+    const io = new IntersectionObserver(([entry]) => setVisible(entry.isIntersecting), { threshold: 0 });
+    io.observe(wrapRef.current);
+    return () => io.disconnect();
+  }, [contained]);
+
   return (
-    <div className="pointer-events-none fixed inset-0 z-0">
+    <div
+      ref={wrapRef}
+      className={
+        contained
+          ? 'pointer-events-none absolute inset-0 overflow-hidden'
+          : 'pointer-events-none fixed inset-0 z-0'
+      }
+    >
       <Canvas
+        frameloop={visible ? 'always' : 'never'}
         camera={{ position: [-0.2, 0.35, 5.4], fov: 38 }}
-        gl={{ antialias: true, alpha: false, toneMapping: THREE.ACESFilmicToneMapping }}
-        dpr={[1, 1.6]}
+        gl={{ antialias: !lite, alpha: transparent, toneMapping: THREE.ACESFilmicToneMapping }}
+        dpr={lite ? [1, 1.25] : [1, 1.6]}
+        onCreated={({ gl }) => gl.setClearColor(0x000000, 0)}
       >
-        <Scene />
+        <Scene lite={lite} transparent={transparent} />
       </Canvas>
     </div>
   );
