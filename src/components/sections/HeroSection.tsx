@@ -201,7 +201,7 @@ export function HeroSection() {
               <motion.div
                 aria-hidden
                 className="absolute inset-0 bg-cover bg-center"
-                style={{ backgroundImage: 'url(/stage/halftone.jpg)' }}
+                style={{ backgroundImage: 'url(/stage/aura.jpg)' }}
                 animate={{ scale: [1, 1.07, 1] }}
                 transition={{ duration: 16, repeat: Infinity, ease: 'easeInOut' }}
               />
