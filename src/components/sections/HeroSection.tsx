@@ -9,6 +9,7 @@ import { LomeTimeWidget } from '@/components/interactive/LomeTimeWidget';
 import { ShimmerButton, MagneticButton } from '@/components/interactive/MagneticButton';
 import { KineticWords } from '@/components/interactive/KineticWords';
 import { TiltCard } from '@/components/interactive/TiltCard';
+import { StageBackground } from '@/components/interactive/StageBackground';
 import { sound } from '@/lib/sound';
 
 // 3D stage: client-only (WebGL), loaded lazily so the hero text paints first.
@@ -198,13 +199,7 @@ export function HeroSection() {
               max={7}
               className="relative w-full max-w-[460px] aspect-[4/5] rounded-[28px] overflow-hidden border border-[var(--line)] shadow-2xl"
             >
-              <motion.div
-                aria-hidden
-                className="absolute inset-0 bg-cover bg-center"
-                style={{ backgroundImage: 'url(/stage/aura.jpg)' }}
-                animate={{ scale: [1, 1.07, 1] }}
-                transition={{ duration: 16, repeat: Infinity, ease: 'easeInOut' }}
-              />
+              <StageBackground />
               <WorldCanvas contained transparent />
               <div className="absolute inset-0 flex items-center justify-center">
                 <DesignerBadge />
